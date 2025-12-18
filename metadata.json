@@ -1,0 +1,5 @@
+{
+  "name": "D-Apartment Ops (Lite)",
+  "description": "An offline-first, multi-workspace apartment management system for managing units, tenants, leases, utility readings, and invoices.",
+  "requestFramePermissions": []
+}
