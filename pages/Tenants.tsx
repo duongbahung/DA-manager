@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { WorkspaceStore, Tenant } from '../types';
-import { Plus, Search, Edit2, Trash2, X, Phone, User as UserIcon } from 'lucide-react';
+import { Plus, Search, Edit2, Trash2, X, Phone, User as UserIcon, Wallet } from 'lucide-react';
 
 interface Props {
   store: WorkspaceStore;
@@ -19,7 +19,8 @@ const Tenants: React.FC<Props> = ({ store, updateStore }) => {
     emergencyContact: '',
     cccd: '',
     notes: '',
-    vehiclePlates: []
+    vehiclePlates: [],
+    creditBalance: 0
   });
 
   const [newPlate, setNewPlate] = useState('');
@@ -40,14 +41,15 @@ const Tenants: React.FC<Props> = ({ store, updateStore }) => {
           emergencyContact: formData.emergencyContact || '',
           cccd: formData.cccd || '',
           notes: formData.notes || '',
-          vehiclePlates: formData.vehiclePlates || []
+          vehiclePlates: formData.vehiclePlates || [],
+          creditBalance: formData.creditBalance || 0
         };
         return { ...prev, tenants: [...prev.tenants, newTenant] };
       }
     });
     setIsModalOpen(false);
     setEditingTenant(null);
-    setFormData({ fullName: '', phone: '', emergencyContact: '', cccd: '', notes: '', vehiclePlates: [] });
+    setFormData({ fullName: '', phone: '', emergencyContact: '', cccd: '', notes: '', vehiclePlates: [], creditBalance: 0 });
   };
 
   const deleteTenant = (id: string) => {
@@ -66,7 +68,7 @@ const Tenants: React.FC<Props> = ({ store, updateStore }) => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Quản lý khách thuê</h2>
-          <p className="text-gray-500 text-sm">Lưu trữ thông tin liên lạc và định danh.</p>
+          <p className="text-gray-500 text-sm">Lưu trữ thông tin liên lạc và tiền thừa trả trước.</p>
         </div>
         <button 
           onClick={() => { setIsModalOpen(true); setEditingTenant(null); }}
@@ -114,14 +116,20 @@ const Tenants: React.FC<Props> = ({ store, updateStore }) => {
                 </button>
               </div>
             </div>
+            
+            {/* Credit Balance Display */}
+            <div className="bg-blue-50 rounded-xl p-3 mb-4 flex items-center justify-between">
+              <div className="flex items-center gap-2 text-blue-700">
+                <Wallet size={16} />
+                <span className="text-xs font-bold uppercase">Số dư tiền thừa</span>
+              </div>
+              <span className="font-black text-blue-700">{(tenant.creditBalance || 0).toLocaleString()}đ</span>
+            </div>
+
             <div className="space-y-2 text-sm text-gray-800">
               <div className="flex justify-between">
                 <span className="text-gray-500">CCCD:</span>
                 <span className="font-medium">{tenant.cccd || 'N/A'}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-500">Người LH khẩn cấp:</span>
-                <span className="font-medium">{tenant.emergencyContact || 'N/A'}</span>
               </div>
               <div>
                 <span className="text-gray-500 block mb-1">Biển số xe:</span>
@@ -157,6 +165,10 @@ const Tenants: React.FC<Props> = ({ store, updateStore }) => {
               <div className="space-y-1">
                 <label className="text-xs font-bold uppercase text-gray-400">CCCD/CMND</label>
                 <input className="w-full border border-gray-300 rounded-xl px-4 py-2 bg-white text-gray-900" value={formData.cccd} onChange={e => setFormData({ ...formData, cccd: e.target.value })} />
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs font-bold uppercase text-gray-400">Số dư hiện tại (đ)</label>
+                <input type="number" className="w-full border border-gray-300 rounded-xl px-4 py-2 bg-white text-blue-600 font-bold" value={formData.creditBalance} onChange={e => setFormData({ ...formData, creditBalance: Number(e.target.value) })} />
               </div>
               <div className="col-span-2 space-y-1">
                 <label className="text-xs font-bold uppercase text-gray-400">Người liên hệ khẩn cấp</label>

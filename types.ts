@@ -22,6 +22,7 @@ export interface Tenant {
   cccd: string;
   notes: string;
   vehiclePlates: string[];
+  creditBalance: number; // Tiền thừa/trả trước của khách
 }
 
 export enum LeaseStatus {
@@ -81,10 +82,12 @@ export interface Invoice {
 export interface Payment {
   id: string;
   invoiceId: string;
+  tenantId?: string; // Có thể thanh toán trực tiếp cho khách (nạp tiền)
   date: string;
   amount: number;
   method: 'Cash' | 'Bank';
   note: string;
+  isCreditTopUp?: boolean; // Đánh dấu là nạp tiền vào tài khoản khách
 }
 
 export enum MaintenancePriority {
